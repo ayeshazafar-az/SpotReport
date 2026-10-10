@@ -4,6 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'services/supabase_service.dart';
 import 'views/auth_screen.dart';
 import 'views/report_screen.dart';
+import 'views/checkpoint_screen.dart';
+import 'views/citizen_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,8 +95,8 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
 
   final List<Widget> _screens = [
     const OfficerReportScreen(),
-    const CheckpointSearchPlaceholderScreen(),
-    const CitizenSlipsPlaceholderScreen(),
+    const CheckpointSearchScreen(),
+    const CitizenSlipsScreen(), // <- Replaced final placeholder here
   ];
 
   @override
