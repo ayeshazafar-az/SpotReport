@@ -222,8 +222,8 @@ class _OfficerReportScreenState extends State<OfficerReportScreen> {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1E1E1E),
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             Icon(Icons.check_circle, color: Colors.green, size: 28),
             SizedBox(width: 10),
             Text('Slip Registered'),
@@ -366,9 +366,9 @@ class _OfficerReportScreenState extends State<OfficerReportScreen> {
                           borderRadius: BorderRadius.circular(10),
                           child: Image.memory(_imageBytes!, fit: BoxFit.cover),
                         )
-                      : Column(
+                      : const Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(
                               Icons.add_a_photo_outlined,
                               size: 48,

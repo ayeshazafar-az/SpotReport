@@ -6,7 +6,6 @@ import '../models/incident_model.dart';
 class SupabaseService {
   static final SupabaseClient client = Supabase.instance.client;
 
-  /// Initialize Supabase connection
   static Future<void> initialize() async {
     await Supabase.initialize(
       url: AppConstants.supabaseUrl,
@@ -14,7 +13,44 @@ class SupabaseService {
     );
   }
 
-  /// Upload photo bytes to 'damage_photos' bucket and return public URL
+  // ====================================================================
+  // AUTHENTICATION METHODS
+  // ====================================================================
+
+  static Future<void> signIn(String email, String password) async {
+    await client.auth.signInWithPassword(email: email, password: password);
+  }
+
+  static Future<void> signUp({
+    required String email,
+    required String password,
+    required String fullName,
+    required String phone,
+    required String cnic,
+    required String role,
+  }) async {
+    final response = await client.auth.signUp(email: email, password: password);
+
+    if (response.user != null) {
+      // Create the profile in the public.profiles table
+      await client.from('profiles').upsert({
+        'id': response.user!.id,
+        'full_name': fullName,
+        'phone_number': phone,
+        'cnic': cnic,
+        'role': role,
+      });
+    }
+  }
+
+  static Future<void> signOut() async {
+    await client.auth.signOut();
+  }
+
+  // ====================================================================
+  // EXISTING INCIDENT METHODS
+  // ====================================================================
+
   static Future<String> uploadDamagePhoto({
     required Uint8List bytes,
     required String fileName,
@@ -30,11 +66,9 @@ class SupabaseService {
             upsert: true,
           ),
         );
-
     return client.storage.from('damage_photos').getPublicUrl(path);
   }
 
-  /// Save an official incident report created by an officer
   static Future<IncidentModel> createIncident(Map<String, dynamic> data) async {
     final response = await client
         .from('incidents')
@@ -44,7 +78,6 @@ class SupabaseService {
     return IncidentModel.fromJson(response);
   }
 
-  /// Instant Checkpoint Search by Vehicle Registration Number
   static Future<List<IncidentModel>> searchByVehicleNumber(
     String vehicleNumber,
   ) async {
@@ -54,25 +87,21 @@ class SupabaseService {
         .select()
         .ilike('vehicle_number', '%$cleanPlate%')
         .order('created_at', ascending: false);
-
     return (response as List)
         .map((json) => IncidentModel.fromJson(json))
         .toList();
   }
 
-  /// Retrieve incident details by unique incident code
   static Future<IncidentModel?> getByIncidentCode(String code) async {
     final response = await client
         .from('incidents')
         .select()
         .eq('incident_code', code)
         .maybeSingle();
-
     if (response == null) return null;
     return IncidentModel.fromJson(response);
   }
 
-  /// Get active clearance slips for a citizen's phone number
   static Future<List<IncidentModel>> getIncidentsByDriverPhone(
     String phone,
   ) async {
@@ -81,13 +110,11 @@ class SupabaseService {
         .select()
         .eq('driver_phone', phone)
         .order('created_at', ascending: false);
-
     return (response as List)
         .map((json) => IncidentModel.fromJson(json))
         .toList();
   }
 
-  /// Update repair status ('Unrepaired' -> 'In Repair' -> 'Repaired')
   static Future<void> updateRepairStatus(
     String incidentId,
     String status,
