@@ -15,6 +15,12 @@ class _CheckpointSearchScreenState extends State<CheckpointSearchScreen> {
   bool _hasSearched = false;
   List<IncidentModel> _results = [];
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _performSearch() async {
     final query = _searchController.text.trim();
     if (query.isEmpty) return;
@@ -164,7 +170,7 @@ class _CheckpointSearchScreenState extends State<CheckpointSearchScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color),
       ),

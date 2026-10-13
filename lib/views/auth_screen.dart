@@ -21,6 +21,16 @@ class _AuthScreenState extends State<AuthScreen> {
 
   String _selectedRole = 'officer'; // Default role for testing
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    _cnicController.dispose();
+    super.dispose();
+  }
+
   Future<void> _submitAuth() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);

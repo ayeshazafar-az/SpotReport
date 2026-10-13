@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../services/supabase_service.dart';
@@ -16,6 +15,12 @@ class _CitizenSlipsScreenState extends State<CitizenSlipsScreen> {
   bool _isLoading = false;
   bool _hasSearched = false;
   List<IncidentModel> _slips = [];
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   Future<void> _fetchMySlips() async {
     final phone = _phoneController.text.trim();
@@ -268,8 +273,8 @@ class _CitizenSlipsScreenState extends State<CitizenSlipsScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: isRepaired
-                                          ? Colors.green.withOpacity(0.2)
-                                          : Colors.amber.withOpacity(0.2),
+                                          ? Colors.green.withValues(alpha: 0.2)
+                                          : Colors.amber.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(8),
                                       border: Border.all(
                                         color: isRepaired

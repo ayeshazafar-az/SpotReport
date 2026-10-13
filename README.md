@@ -127,7 +127,3 @@ lib/
 │   ├── citizen_screen.dart    # Citizen portal for repair uploads
 │   └── report_screen.dart     # Officer portal for incident logging
 └── main.dart                  # App entry point, Theme & Navigation Wrapper
-
-```
-
-```

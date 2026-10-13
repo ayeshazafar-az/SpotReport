@@ -109,6 +109,15 @@ class _OfficerReportScreenState extends State<OfficerReportScreen> {
         }
       }
 
+      if (permission == LocationPermission.deniedForever) {
+        setState(() {
+          _latitude = 33.6844;
+          _longitude = 73.0479;
+          _isFetchingLocation = false;
+        });
+        return;
+      }
+
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
@@ -131,8 +140,9 @@ class _OfficerReportScreenState extends State<OfficerReportScreen> {
 
   /// Generate Incident Code (e.g. INC-2026-9812)
   String _generateIncidentCode() {
+    final year = DateTime.now().year;
     final randomNum = Random().nextInt(8999) + 1000;
-    return 'INC-2026-$randomNum';
+    return 'INC-$year-$randomNum';
   }
 
   /// Submit Form Process
