@@ -55,9 +55,8 @@ The system utilizes a relational PostgreSQL database hosted on Supabase:
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/your-username/spot_report.git](https://github.com/your-username/spot_report.git)
+git clone https://github.com/your-username/spot_report.git
 cd spot_report
-
 ```
 
 ### 2. Install Dependencies
@@ -69,16 +68,17 @@ flutter pub get
 
 ### 3. Environment Variables (Secrets)
 
-Create a `.env` file in the root directory (same level as `pubspec.yaml`) and add your project keys. **Do not use quotation marks.**
+Create an `env.json` file in the root directory (same level as `pubspec.yaml`). Flutter requires **JSON format** for `--dart-define-from-file`.
 
-```env
-SUPABASE_URL=[https://your-project.supabase.co](https://your-project.supabase.co)
-SUPABASE_ANON_KEY=your_supabase_anon_key
-GEMINI_API_KEY=your_google_gemini_api_key
-
+```json
+{
+  "SUPABASE_URL": "https://your-project.supabase.co",
+  "SUPABASE_ANON_KEY": "your_supabase_anon_key",
+  "GEMINI_API_KEY": "your_google_gemini_api_key"
+}
 ```
 
-*(Note: Ensure `.env` is listed in your `.gitignore` to prevent secret leakage).*
+⚠️ Both `.env` and `env.json` are listed in `.gitignore` — never commit real keys.
 
 ### 4. Supabase Setup
 
@@ -91,20 +91,16 @@ Execute the following SQL scripts in your Supabase SQL Editor:
 
 ### 5. Run the Application
 
-Because the application injects environment variables securely at compile time, you must run the app using the `--dart-define-from-file` flag:
+Inject environment variables securely at compile time using the `--dart-define-from-file` flag with `env.json`:
 
 **Run on Web (Chrome):**
-
 ```bash
-flutter run --dart-define-from-file=.env -d chrome
-
+flutter run --dart-define-from-file=env.json -d chrome
 ```
 
-**Run on Mobile (Android/iOS emulator):**
-
+**Run on Mobile (Android/iOS):**
 ```bash
-flutter run --dart-define-from-file=.env
-
+flutter run --dart-define-from-file=env.json
 ```
 
 ---

@@ -96,7 +96,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   final List<Widget> _screens = [
     const OfficerReportScreen(),
     const CheckpointSearchScreen(),
-    const CitizenSlipsScreen(), // <- Replaced final placeholder here
+    const CitizenSlipsScreen(),
   ];
 
   @override
