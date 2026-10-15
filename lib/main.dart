@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/theme.dart';
 import 'services/supabase_service.dart';
 import 'views/auth_screen.dart';
-import 'views/report_screen.dart';
 import 'views/checkpoint_screen.dart';
 import 'views/citizen_screen.dart';
+import 'views/report_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,36 +22,10 @@ class SpotClearApp extends StatelessWidget {
     return MaterialApp(
       title: 'SpotClear - Highway Incident System',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.dark,
-      darkTheme: ThemeData.dark().copyWith(
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF1E88E5),
-          secondary: Color(0xFFFFB300),
-          surface: Color(0xFF1E1E1E),
-          error: Color(0xFFF44336),
-          onPrimary: Colors.white,
-          onSurface: Colors.white,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1A1A1A),
-          elevation: 0,
-          centerTitle: false,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF1A1A1A),
-          selectedItemColor: Color(0xFF1E88E5),
-          unselectedItemColor: Colors.grey,
-          type: BottomNavigationBarType.fixed,
-        ),
-      ),
-      home: const AuthGate(), // Changed this from MainNavigationWrapper
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system, // Dynamically adapts to device system theme
+      home: const AuthGate(),
     );
   }
 }
@@ -72,11 +47,11 @@ class AuthGate extends StatelessWidget {
 
         final session = snapshot.data?.session;
         if (session != null) {
-          // User is logged in!
+          // User is logged in
           return const MainNavigationWrapper();
         }
 
-        // User is logged out.
+        // User is logged out
         return const AuthScreen();
       },
     );
@@ -103,23 +78,23 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _screens),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.add_a_photo_outlined),
-            activeIcon: Icon(Icons.add_a_photo),
+            selectedIcon: Icon(Icons.add_a_photo),
             label: 'Log Incident',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.find_in_page_outlined),
-            activeIcon: Icon(Icons.find_in_page),
+            selectedIcon: Icon(Icons.find_in_page),
             label: 'Checkpoint',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.confirmation_number_outlined),
-            activeIcon: Icon(Icons.confirmation_number),
+            selectedIcon: Icon(Icons.confirmation_number),
             label: 'My Slips',
           ),
         ],
